@@ -1,6 +1,7 @@
-import { pgTable, index, text, doublePrecision, timestamp } from "drizzle-orm/pg-core";
-import { sql } from "drizzle-orm";
-import { InferInsertModel, InferSelectModel } from 'drizzle-orm';
+import { pgTable, index, text, doublePrecision, timestamp } from "drizzle-orm/pg-core"
+import { sql } from "drizzle-orm"
+
+
 
 export const addresses = pgTable("addresses", {
 	id: text().primaryKey().notNull(),
@@ -37,7 +38,3 @@ export const addresses = pgTable("addresses", {
 	index("idx_addresses_via_primary").using("btree", table.viaCode.asc().nullsLast().op("text_ops"), table.primaryNumber.asc().nullsLast().op("text_ops")),
 	index("idx_addresses_via_secondary").using("btree", table.viaCode.asc().nullsLast().op("float8_ops"), table.secondaryNumber.asc().nullsLast().op("float8_ops")),
 ]);
-
-// Types for NestJS services/repositories
-export type Address = InferSelectModel<typeof addresses>;
-export type NewAddress = InferInsertModel<typeof addresses>;

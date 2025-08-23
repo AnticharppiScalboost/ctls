@@ -7,9 +7,12 @@ export class AddressesController {
 
   @Get()
   public async findPaginated(
-    @Query('page', ParseIntPipe) page: number = 1,
-    @Query('limit', ParseIntPipe) limit: number = 10,
+    @Query('page') pageParam?: string,
+    @Query('limit') limitParam?: string,
   ) {
+    const page = pageParam ? parseInt(pageParam, 10) : 1;
+    const limit = limitParam ? parseInt(limitParam, 10) : 10;
+    
     return this.addressesService.findPaginated(page, limit);
   }
 }

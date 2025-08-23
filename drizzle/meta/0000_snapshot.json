@@ -1,0 +1,304 @@
+{
+  "id": "00000000-0000-0000-0000-000000000000",
+  "prevId": "",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.addresses": {
+      "name": "addresses",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "nir": {
+          "name": "nir",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "department": {
+          "name": "department",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "municipality": {
+          "name": "municipality",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "address_raw": {
+          "name": "address_raw",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "address_norm": {
+          "name": "address_norm",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "address_canonical": {
+          "name": "address_canonical",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "address_struct": {
+          "name": "address_struct",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "via_code": {
+          "name": "via_code",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "via_label": {
+          "name": "via_label",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "primary_field": {
+          "name": "primary_field",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "secondary_field": {
+          "name": "secondary_field",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "tertiary": {
+          "name": "tertiary",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "quadrant": {
+          "name": "quadrant",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "primary_number": {
+          "name": "primary_number",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "secondary_number": {
+          "name": "secondary_number",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "tertiary_number": {
+          "name": "tertiary_number",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "units": {
+          "name": "units",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "area_priv_m2": {
+          "name": "area_priv_m2",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "area_const_m2": {
+          "name": "area_const_m2",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "transaction_value": {
+          "name": "transaction_value",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "type_field": {
+          "name": "type_field",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "linderos_json": {
+          "name": "linderos_json",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "neighborhood": {
+          "name": "neighborhood",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "idx_addresses_department": {
+          "name": "idx_addresses_department",
+          "columns": [
+            {
+              "expression": "department",
+              "asc": true,
+              "nulls": "last",
+              "opclass": "text_ops",
+              "isExpression": false
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "idx_addresses_municipality": {
+          "name": "idx_addresses_municipality",
+          "columns": [
+            {
+              "expression": "municipality",
+              "asc": true,
+              "nulls": "last",
+              "opclass": "text_ops",
+              "isExpression": false
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "idx_addresses_nir": {
+          "name": "idx_addresses_nir",
+          "columns": [
+            {
+              "expression": "nir",
+              "asc": true,
+              "nulls": "last",
+              "opclass": "text_ops",
+              "isExpression": false
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "idx_addresses_quadrant": {
+          "name": "idx_addresses_quadrant",
+          "columns": [
+            {
+              "expression": "quadrant",
+              "asc": true,
+              "nulls": "last",
+              "opclass": "text_ops",
+              "isExpression": false
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "idx_addresses_via_primary": {
+          "name": "idx_addresses_via_primary",
+          "columns": [
+            {
+              "expression": "via_code",
+              "asc": true,
+              "nulls": "last",
+              "opclass": "text_ops",
+              "isExpression": false
+            },
+            {
+              "expression": "primary_number",
+              "asc": true,
+              "nulls": "last",
+              "opclass": "text_ops",
+              "isExpression": false
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "idx_addresses_via_secondary": {
+          "name": "idx_addresses_via_secondary",
+          "columns": [
+            {
+              "expression": "via_code",
+              "asc": true,
+              "nulls": "last",
+              "opclass": "float8_ops",
+              "isExpression": false
+            },
+            {
+              "expression": "secondary_number",
+              "asc": true,
+              "nulls": "last",
+              "opclass": "float8_ops",
+              "isExpression": false
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {},
+      "policies": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "schemas": {},
+    "tables": {},
+    "columns": {}
+  },
+  "internal": {
+    "tables": {}
+  }
+}
