@@ -136,6 +136,7 @@ export class ProximitySearchService {
     const conditions: any[] = [];
     const radius = options.searchRadius;
 
+    // Condición principal: misma vía y números cercanos
     if (normalizedAddress.viaCode && normalizedAddress.primaryNumber) {
       const lowerBound = normalizedAddress.primaryNumber - radius;
       const upperBound = normalizedAddress.primaryNumber + radius;
@@ -143,15 +144,35 @@ export class ProximitySearchService {
       // Buscar por viaCode normalizado y sus equivalencias
       const viaEquivalents = this.getViaCodeEquivalents(normalizedAddress.viaCode);
       
-      conditions.push(
-        and(
-          or(...viaEquivalents.map(via => eq(addresses.viaCode, via))),
-          gte(addresses.primaryNumber, lowerBound),
-          lte(addresses.primaryNumber, upperBound),
-        ),
+      const mainCondition = and(
+        or(...viaEquivalents.map(via => eq(addresses.viaCode, via))),
+        gte(addresses.primaryNumber, lowerBound),
+        lte(addresses.primaryNumber, upperBound),
       );
+
+      // Si tenemos viaLabel, también filtrar por rango de calles/carreras cercanas
+      if (normalizedAddress.viaLabel) {
+        const viaLabelNumber = this.extractNumberFromViaLabel(normalizedAddress.viaLabel);
+        if (viaLabelNumber) {
+          const lowerVia = viaLabelNumber - Math.floor(radius / 3); // Radio más estricto para vías
+          const upperVia = viaLabelNumber + Math.floor(radius / 3);
+          
+          const viaCondition = sql`CASE 
+            WHEN REGEXP_REPLACE(${addresses.viaLabel}, '[^0-9]', '', 'g') != '' 
+            THEN CAST(REGEXP_REPLACE(${addresses.viaLabel}, '[^0-9]', '', 'g') AS INTEGER) 
+            ELSE 0 
+          END BETWEEN ${lowerVia} AND ${upperVia}`;
+
+          conditions.push(and(mainCondition, viaCondition));
+        } else {
+          conditions.push(mainCondition);
+        }
+      } else {
+        conditions.push(mainCondition);
+      }
     }
 
+    // Condiciones adicionales solo si se solicitan explícitamente
     if (options.includeNeighborhoods && normalizedAddress.neighborhood) {
       conditions.push(
         like(addresses.neighborhood, `%${normalizedAddress.neighborhood}%`),
@@ -160,22 +181,6 @@ export class ProximitySearchService {
 
     if (options.includeQuadrants && normalizedAddress.quadrant) {
       conditions.push(eq(addresses.quadrant, normalizedAddress.quadrant));
-    }
-
-    if (normalizedAddress.viaLabel) {
-      const viaLabelNumber = this.extractNumberFromViaLabel(normalizedAddress.viaLabel);
-      if (viaLabelNumber) {
-        const lowerVia = viaLabelNumber - Math.floor(radius / 2);
-        const upperVia = viaLabelNumber + Math.floor(radius / 2);
-        
-        conditions.push(
-          sql`CASE 
-            WHEN REGEXP_REPLACE(${addresses.viaLabel}, '[^0-9]', '', 'g') != '' 
-            THEN CAST(REGEXP_REPLACE(${addresses.viaLabel}, '[^0-9]', '', 'g') AS INTEGER) 
-            ELSE 0 
-          END BETWEEN ${lowerVia} AND ${upperVia}`,
-        );
-      }
     }
 
     return conditions.length > 0 ? conditions : [sql`1=1`];
@@ -232,18 +237,21 @@ export class ProximitySearchService {
   private calculateDistance(address1: NormalizedAddress, address2: NormalizedAddress): number {
     let distance = 0;
 
+    // Distancia en la misma vía (números de casas/edificios)
     if (address1.primaryNumber && address2.primaryNumber) {
-      distance += Math.abs(address1.primaryNumber - address2.primaryNumber);
+      distance += Math.abs(address1.primaryNumber - address2.primaryNumber) / 10; // Normalizar a cuadras aproximadas
     }
 
-    if (address1.secondaryNumber && address2.secondaryNumber) {
-      distance += Math.abs(address1.secondaryNumber - address2.secondaryNumber) * 0.1;
-    }
-
+    // Distancia entre vías (calles/carreras diferentes)
     const viaDistance = this.calculateViaDistance(address1.viaLabel, address2.viaLabel);
     distance += viaDistance;
 
-    return distance;
+    // Distancia adicional por números secundarios (interior, apartamento, etc.)
+    if (address1.secondaryNumber && address2.secondaryNumber) {
+      distance += Math.abs(address1.secondaryNumber - address2.secondaryNumber) * 0.05;
+    }
+
+    return Math.round(distance * 10) / 10; // Redondear a 1 decimal
   }
 
   private calculateViaDistance(via1?: string, via2?: string): number {
@@ -253,7 +261,8 @@ export class ProximitySearchService {
     const num2 = this.extractNumberFromViaLabel(via2);
 
     if (num1 && num2) {
-      return Math.abs(num1 - num2) * 0.5;
+      // Cada número de vía representa aproximadamente 1 cuadra de distancia
+      return Math.abs(num1 - num2);
     }
 
     return 0;
