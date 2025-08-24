@@ -1,0 +1,169 @@
+###
+# Pruebas con Vectores Existentes en Pinecone (hability-addresses)
+# Usar con REST Client (VS Code) o herramientas similares
+###
+
+### 1. Verificar estadísticas del índice existente
+GET http://localhost:3000/addresses/admin/vector-stats
+
+###
+
+### 2. Test básico con datos existentes
+POST http://localhost:3000/admin/test-existing-vectors
+Content-Type: application/json
+
+{
+  "query": "cm reserva silvestre",
+  "limit": 5
+}
+
+###
+
+### 3. Test con dirección completa
+POST http://localhost:3000/admin/test-existing-vectors
+Content-Type: application/json
+
+{
+  "query": "cm reserva silvestre lt 16",
+  "limit": 3
+}
+
+###
+
+### 4. Búsqueda semántica normal con datos existentes
+POST http://localhost:3000/addresses/search/semantic
+Content-Type: application/json
+
+{
+  "address": "cm reserva silvestre",
+  "options": {
+    "searchRadius": 10,
+    "page": 1,
+    "limit": 5
+  }
+}
+
+###
+
+### 5. Búsqueda por municipio (La Ceja)
+POST http://localhost:3000/addresses/search/semantic
+Content-Type: application/json
+
+{
+  "address": "reserva silvestre",
+  "options": {
+    "searchRadius": 15,
+    "municipality": "LA CEJA",
+    "page": 1,
+    "limit": 10
+  }
+}
+
+###
+
+### 6. Test con variaciones de escritura
+POST http://localhost:3000/admin/test-existing-vectors
+Content-Type: application/json
+
+{
+  "query": "carrera reserva silvestre lote 16",
+  "limit": 5
+}
+
+###
+
+### 7. Test con abreviaciones
+POST http://localhost:3000/admin/test-existing-vectors
+Content-Type: application/json
+
+{
+  "query": "cr reserva lt 16",
+  "limit": 5
+}
+
+###
+
+### 8. Búsqueda por departamento (Antioquia)
+POST http://localhost:3000/addresses/search/semantic
+Content-Type: application/json
+
+{
+  "address": "reserva silvestre",
+  "options": {
+    "searchRadius": 20,
+    "department": "ANTIOQUIA",
+    "page": 1,
+    "limit": 8
+  }
+}
+
+###
+
+### 9. Test de fallback (búsqueda tradicional si falla semántica)
+POST http://localhost:3000/addresses/search/proximity
+Content-Type: application/json
+
+{
+  "address": "cm reserva silvestre lt 16",
+  "options": {
+    "searchRadius": 10,
+    "page": 1,
+    "limit": 5
+  }
+}
+
+###
+
+### 10. Comparación directa: mismo query en ambos métodos
+
+# Método tradicional
+POST http://localhost:3000/addresses/search/proximity
+Content-Type: application/json
+
+{
+  "address": "reserva silvestre lote 16",
+  "options": {
+    "searchRadius": 10,
+    "page": 1,
+    "limit": 5
+  }
+}
+
+###
+
+# Método semántico
+POST http://localhost:3000/addresses/search/semantic
+Content-Type: application/json
+
+{
+  "address": "reserva silvestre lote 16",
+  "options": {
+    "searchRadius": 10,
+    "page": 1,
+    "limit": 5
+  }
+}
+
+###
+
+### 11. Test con query muy genérico
+POST http://localhost:3000/admin/test-existing-vectors
+Content-Type: application/json
+
+{
+  "query": "antioquia ceja",
+  "limit": 10
+}
+
+###
+
+### 12. Test con dirección mal escrita (ventaja semántica)
+POST http://localhost:3000/admin/test-existing-vectors
+Content-Type: application/json
+
+{
+  "query": "cm reserba silvesttre lte 16",
+  "limit": 5
+}
+
+###
