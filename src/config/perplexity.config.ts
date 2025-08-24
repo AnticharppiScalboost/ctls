@@ -7,5 +7,5 @@ export default registerAs('perplexity', () => ({
   maxTokens: 8192,
   temperature: 0.7,
   pollingInterval: 4000, // 4 segundos entre polls
-  maxPollingAttempts: 300, // máximo 5 minutos de espera
+  maxPollingAttempts: 700, // máximo 10 minutos de espera
 }));
