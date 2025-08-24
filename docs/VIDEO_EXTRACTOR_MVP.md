@@ -70,12 +70,14 @@ Sistema MVP que expone únicamente un endpoint para encolar tareas de extracció
 ### Variables de Entorno:
 
 ```bash
-# Requerida
+# Requerida - URL de la API externa de thumbnails
 VIDEO_EXTRACTOR_API_URL=https://tu-api-privada.render.com
 
-# Redis (para BullMQ)
+# Redis (para BullMQ) - configurado globalmente en la app
 REDIS_URL=redis://localhost:6379
 ```
+
+> **Nota**: La configuración se inyecta correctamente en el módulo usando `ConfigModule.forFeature()` y se accede en el servicio como `videoExtractor.apiUrl`.
 
 ## 🔄 Flujo de Trabajo MVP
 

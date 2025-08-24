@@ -12,24 +12,19 @@ import {
   API_ENDPOINTS,
   FPS_LIMITS,
   DIMENSION_LIMITS,
-  THUMBNAIL_LIMITS,
-  POLLING_CONFIG
+  THUMBNAIL_LIMITS
 } from '../constants/video-extractor.constants';
 
 @Injectable()
 export class VideoExtractorService {
   private readonly logger = new Logger(VideoExtractorService.name);
   private readonly apiUrl: string | undefined;
-  private readonly pollingInterval: number;
-  private readonly maxPollingAttempts: number;
 
   constructor(
     private readonly configService: ConfigService,
     private readonly httpService: HttpService,
   ) {
     this.apiUrl = this.configService.get<string>('videoExtractor.apiUrl');
-    this.pollingInterval = this.configService.get<number>('videoExtractor.pollingInterval') || POLLING_CONFIG.INTERVAL;
-    this.maxPollingAttempts = this.configService.get<number>('videoExtractor.maxPollingAttempts') || POLLING_CONFIG.MAX_ATTEMPTS;
 
     if (!this.apiUrl) {
       this.logger.warn('⚠️ [VIDEO_EXTRACTOR] VIDEO_EXTRACTOR_API_URL no configurada - el servicio no estará disponible');

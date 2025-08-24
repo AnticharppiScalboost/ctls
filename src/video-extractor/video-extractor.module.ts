@@ -1,15 +1,18 @@
 import { Module } from '@nestjs/common';
 import { BullModule } from '@nestjs/bullmq';
 import { HttpModule } from '@nestjs/axios';
+import { ConfigModule } from '@nestjs/config';
 import { VideoExtractorController } from './video-extractor.controller';
 import { VideoExtractorService } from './services/video-extractor.service';
 import { VideoQueueService } from './services/video-queue.service';
 import { VideoExtractionProcessor } from './processors/video-extraction.processor';
 import { VIDEO_EXTRACTOR_QUEUE } from './constants/video-extractor.constants';
 import { RedisModule } from '../redis/redis.module';
+import videoExtractorConfig from '../config/video-extractor.config';
 
 @Module({
   imports: [
+    ConfigModule.forFeature(videoExtractorConfig),
     HttpModule.register({
       timeout: 60000, // 60 segundos timeout por defecto
       maxRedirects: 5,
