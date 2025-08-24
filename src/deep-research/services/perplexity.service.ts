@@ -23,16 +23,10 @@ export class PerplexityService {
     private readonly httpService: HttpService,
   ) {
     this.apiKey = this.configService.get<string>('perplexity.apiKey');
-    this.baseUrl =
-      this.configService.get<string>('perplexity.baseUrl') ||
-      'https://api.perplexity.ai';
-    this.defaultModel =
-      this.configService.get<string>('perplexity.model') ||
-      'sonar-deep-research';
-    this.pollingInterval =
-      this.configService.get<number>('perplexity.pollingInterval') || 10000;
-    this.maxPollingAttempts =
-      this.configService.get<number>('perplexity.maxPollingAttempts') || 300;
+    this.baseUrl = this.configService.get<string>('perplexity.baseUrl', 'https://api.perplexity.ai');
+    this.defaultModel = this.configService.get<string>('perplexity.model', 'sonar-deep-research');
+    this.pollingInterval = this.configService.get<number>('perplexity.pollingInterval', 1000);
+    this.maxPollingAttempts = this.configService.get<number>('perplexity.maxPollingAttempts', 300);
 
     if (!this.apiKey) {
       this.logger.warn(
@@ -75,10 +69,10 @@ export class PerplexityService {
         ],
         max_tokens:
           request.options?.maxTokens ||
-          this.configService.get('perplexity.maxTokens'),
+          this.configService.get('perplexity.maxTokens', 8192),
         temperature:
           request.options?.temperature ||
-          this.configService.get('perplexity.temperature'),
+          this.configService.get('perplexity.temperature', 0.7),
         return_images: true,
         return_related_questions: true,
         search_recency_filter: 'month',

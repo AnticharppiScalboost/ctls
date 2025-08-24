@@ -32,15 +32,17 @@ $ npm install
 ### Variables de Entorno
 
 ```bash
-# Redis
+# Redis (requerido para BullMQ)
 REDIS_URL=redis://localhost:6379
 
-# Deep Research - Perplexity API
+# Deep Research - Perplexity API (requerido)
 PERPLEXITY_API_KEY=tu-api-key-aqui
 
-# Video Extractor - API Externa
+# Video Extractor - API Externa (requerido)
 VIDEO_EXTRACTOR_API_URL=https://tu-api-privada.render.com
 ```
+
+> **Nota**: Las configuraciones de Perplexity (baseUrl, model, etc.) se definen en `src/config/perplexity.config.ts` con valores por defecto sensatos. Solo necesitas configurar `PERPLEXITY_API_KEY`.
 
 ## 🚀 Ejecutar el Proyecto
 
