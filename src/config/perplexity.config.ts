@@ -6,6 +6,6 @@ export default registerAs('perplexity', () => ({
   model: 'sonar-deep-research',
   maxTokens: 8192,
   temperature: 0.7,
-  pollingInterval: 1000, // 1 segundo entre polls
+  pollingInterval: 4000, // 4 segundos entre polls
   maxPollingAttempts: 300, // máximo 5 minutos de espera
 }));
