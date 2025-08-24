@@ -10,7 +10,7 @@ import redisConfig from '../config/redis.config';
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
         connection: {
-          url: configService.get('redis.url'),
+          url: configService.getOrThrow<string>('redis.url'),
         },
       }),
       inject: [ConfigService],

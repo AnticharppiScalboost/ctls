@@ -88,59 +88,7 @@ export class VideoQueueService {
     }
   }
 
-  /**
-   * Obtiene el estado de un job específico
-   */
-  async getJobStatus(requestId: string) {
-    try {
-      const job = await this.videoQueue.getJob(requestId);
-      
-      if (!job) {
-        return null;
-      }
 
-      const state = await job.getState();
-      const progress = job.progress;
-      
-      return {
-        id: job.id,
-        name: job.name,
-        data: job.data,
-        state,
-        progress,
-        processedOn: job.processedOn,
-        finishedOn: job.finishedOn,
-        failedReason: job.failedReason,
-        returnvalue: job.returnvalue,
-      };
-    } catch (error) {
-      this.logger.error(`❌ [VIDEO_QUEUE] Error obteniendo estado del job ${requestId}: ${error.message}`);
-      return null;
-    }
-  }
-
-  /**
-   * Obtiene estadísticas de la cola
-   */
-  async getQueueStats() {
-    try {
-      const waiting = await this.videoQueue.getWaiting();
-      const active = await this.videoQueue.getActive();
-      const completed = await this.videoQueue.getCompleted();
-      const failed = await this.videoQueue.getFailed();
-
-      return {
-        waiting: waiting.length,
-        active: active.length,
-        completed: completed.length,
-        failed: failed.length,
-        total: waiting.length + active.length + completed.length + failed.length,
-      };
-    } catch (error) {
-      this.logger.error(`❌ [VIDEO_QUEUE] Error obteniendo estadísticas: ${error.message}`);
-      return null;
-    }
-  }
 
   /**
    * Valida una petición de extracción

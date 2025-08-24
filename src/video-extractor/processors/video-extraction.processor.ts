@@ -47,10 +47,10 @@ export class VideoExtractionProcessor extends WorkerHost {
 
       await job.updateProgress(20);
 
-      // 2. Realizar la extracción completa (iniciar + polling)
+      // 2. Iniciar la extracción (la API externa manejará el callback directamente)
       this.logger.log(`🎬 [VIDEO_PROCESSOR] Iniciando extracción de thumbnails...`);
       
-      const extractionResponse = await this.videoExtractorService.performCompleteExtraction({
+      const taskId = await this.videoExtractorService.startThumbnailExtraction({
         videoUrl: data.videoUrl,
         callbackUrl: data.callbackUrl,
         requestId: data.requestId,
@@ -58,67 +58,36 @@ export class VideoExtractionProcessor extends WorkerHost {
         metadata: data.metadata,
       });
 
-      await job.updateProgress(80);
+      await job.updateProgress(50);
 
-      // 3. Preparar resultado para enviar al callback
+      // 3. Marcar como enviado - la API externa manejará el resto
       const processingTime = Date.now() - startTime;
-      const result: VideoExtractionResult = {
+      const result = {
         success: true,
         requestId: data.requestId,
-        taskId: extractionResponse.task_id,
-        thumbnails: extractionResponse.thumbnails || [],
-        openaiFileIds: extractionResponse.openai_file_ids || [],
-        totalThumbnails: extractionResponse.thumbnails?.length || 0,
+        taskId,
+        status: 'submitted',
+        message: 'Extracción iniciada en API externa. El resultado llegará vía webhook.',
         metadata: {
           ...data.metadata,
-          taskId: extractionResponse.task_id,
-          webhookDelivered: extractionResponse.webhook_delivered,
+          taskId,
           jobId,
           extractionOptions: data.options,
+          submittedAt: new Date().toISOString(),
         },
         processingTime,
         completedAt: new Date(),
       };
 
-      await job.updateProgress(90);
-
-      // 4. Enviar resultado al callback URL
-      this.logger.log(`📡 [VIDEO_PROCESSOR] Enviando resultado a callback URL: ${data.callbackUrl}`);
-      
-      try {
-        const callbackResponse = await firstValueFrom(
-          this.httpService.post(data.callbackUrl, result, {
-            headers: {
-              'Content-Type': 'application/json',
-              'User-Agent': 'Video-Extractor-Service/1.0',
-            },
-            timeout: 30000, // 30 segundos timeout
-          })
-        );
-
-        this.logger.log(`✅ [VIDEO_PROCESSOR] Callback enviado exitosamente - Status: ${callbackResponse.status}`);
-        
-      } catch (callbackError) {
-        this.logger.error(`❌ [VIDEO_PROCESSOR] Error enviando callback: ${callbackError.message}`);
-        
-        // No lanzamos error aquí para que el job se marque como exitoso
-        // pero registramos que hubo problema con el callback
-        result.metadata = {
-          ...result.metadata,
-          callbackError: callbackError.message,
-          callbackDelivered: false,
-        };
-      }
-
       await job.updateProgress(100);
 
       const totalProcessingTime = Date.now() - startTime;
-      this.logger.log(`🎉 [VIDEO_PROCESSOR] === JOB COMPLETADO EXITOSAMENTE ===`);
-      this.logger.log(`🎉 [VIDEO_PROCESSOR] Tiempo total: ${totalProcessingTime}ms`);
-      this.logger.log(`🎉 [VIDEO_PROCESSOR] Thumbnails generados: ${result.thumbnails?.length || 0}`);
-      this.logger.log(`🎉 [VIDEO_PROCESSOR] OpenAI File IDs: ${result.openaiFileIds?.length || 0}`);
+      this.logger.log(`🎉 [VIDEO_PROCESSOR] === EXTRACCIÓN INICIADA EXITOSAMENTE ===`);
+      this.logger.log(`🎉 [VIDEO_PROCESSOR] Tiempo de envío: ${totalProcessingTime}ms`);
+      this.logger.log(`🎉 [VIDEO_PROCESSOR] Task ID: ${taskId}`);
+      this.logger.log(`🔔 [VIDEO_PROCESSOR] La API externa enviará el resultado a: ${data.callbackUrl}`);
 
-      // Guardar el resultado en el job para consultas posteriores
+      // Guardar el estado inicial en el job para consultas posteriores
       return result as any;
 
     } catch (error) {

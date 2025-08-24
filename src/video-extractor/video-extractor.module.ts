@@ -6,6 +6,7 @@ import { VideoExtractorService } from './services/video-extractor.service';
 import { VideoQueueService } from './services/video-queue.service';
 import { VideoExtractionProcessor } from './processors/video-extraction.processor';
 import { VIDEO_EXTRACTOR_QUEUE } from './constants/video-extractor.constants';
+import { RedisModule } from '../redis/redis.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { VIDEO_EXTRACTOR_QUEUE } from './constants/video-extractor.constants';
     BullModule.registerQueue({
       name: VIDEO_EXTRACTOR_QUEUE,
     }),
+    RedisModule,
   ],
   controllers: [VideoExtractorController],
   providers: [
@@ -23,9 +25,6 @@ import { VIDEO_EXTRACTOR_QUEUE } from './constants/video-extractor.constants';
     VideoQueueService,
     VideoExtractionProcessor,
   ],
-  exports: [
-    VideoExtractorService,
-    VideoQueueService,
-  ],
+  exports: [VideoExtractorService, VideoQueueService],
 })
 export class VideoExtractorModule {}
