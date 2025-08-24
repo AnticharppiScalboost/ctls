@@ -1,0 +1,153 @@
+###
+# Deep Research API - MVP
+# Sistema de investigación profunda con Perplexity API
+###
+
+### Variables
+@baseUrl = http://localhost:3000
+@callbackUrl = {{baseUrl}}/deep-research/callback/test
+
+### 1. Health Check - Verificar que Perplexity esté configurado
+GET {{baseUrl}}/deep-research/health
+Content-Type: application/json
+
+###
+
+### 2. Encolar investigación básica
+POST {{baseUrl}}/deep-research/enqueue
+Content-Type: application/json
+
+{
+  "prompt": "¿Cuáles son las últimas tendencias en inteligencia artificial en 2024? Incluye información sobre modelos de lenguaje, aplicaciones prácticas y desarrollos recientes.",
+  "callbackUrl": "{{callbackUrl}}"
+}
+
+###
+
+### 3. Investigación con opciones personalizadas
+POST {{baseUrl}}/deep-research/enqueue
+Content-Type: application/json
+
+{
+  "prompt": "Analiza el mercado inmobiliario en Colombia durante 2024. Incluye datos sobre precios, tendencias de compra/venta, y factores económicos que afectan el sector.",
+  "callbackUrl": "{{callbackUrl}}",
+  "requestId": "custom-research-001",
+  "metadata": {
+    "category": "real-estate",
+    "country": "colombia",
+    "year": 2024,
+    "user": "test-user"
+  },
+  "options": {
+    "maxTokens": 4096,
+    "temperature": 0.5,
+    "model": "sonar-deep-research"
+  }
+}
+
+###
+
+### 4. Investigación técnica específica
+POST {{baseUrl}}/deep-research/enqueue
+Content-Type: application/json
+
+{
+  "prompt": "Explica cómo implementar búsqueda semántica usando embeddings y bases de datos vectoriales. Incluye ejemplos prácticos, mejores prácticas y comparación de herramientas como Pinecone, Weaviate y Chroma.",
+  "callbackUrl": "{{callbackUrl}}",
+  "metadata": {
+    "topic": "semantic-search",
+    "technical": true
+  }
+}
+
+###
+
+### 5. Investigación con URL de callback externa (ejemplo)
+POST {{baseUrl}}/deep-research/enqueue
+Content-Type: application/json
+
+{
+  "prompt": "¿Cuáles son las mejores prácticas para escalabilidad en aplicaciones Node.js en 2024?",
+  "callbackUrl": "https://webhook.site/unique-id-here",
+  "requestId": "external-callback-test"
+}
+
+###
+
+### 6. Investigación de mercado
+POST {{baseUrl}}/deep-research/enqueue
+Content-Type: application/json
+
+{
+  "prompt": "Analiza las oportunidades de inversión en startups de tecnología en América Latina durante 2024. Incluye datos sobre funding, sectores más prometedores y comparación con años anteriores.",
+  "callbackUrl": "{{callbackUrl}}",
+  "metadata": {
+    "analysis_type": "market_research",
+    "region": "latam",
+    "sector": "tech_startups"
+  },
+  "options": {
+    "maxTokens": 6144,
+    "temperature": 0.3
+  }
+}
+
+###
+
+### 7. Investigación académica
+POST {{baseUrl}}/deep-research/enqueue
+Content-Type: application/json
+
+{
+  "prompt": "Proporciona un análisis exhaustivo sobre los avances en computación cuántica en 2024. Incluye desarrollos en hardware, algoritmos, aplicaciones comerciales y los principales jugadores en el mercado.",
+  "callbackUrl": "{{callbackUrl}}",
+  "metadata": {
+    "type": "academic",
+    "field": "quantum_computing",
+    "depth": "comprehensive"
+  }
+}
+
+###
+
+### 8. Test de callback - Simular respuesta de Perplexity
+POST {{baseUrl}}/deep-research/callback/test
+Content-Type: application/json
+
+{
+  "success": true,
+  "requestId": "test-callback-001",
+  "content": "Esta es una respuesta de prueba simulando el resultado de una investigación profunda de Perplexity. El contenido incluiría el análisis detallado solicitado en el prompt original.",
+  "usage": {
+    "prompt_tokens": 150,
+    "completion_tokens": 2048,
+    "total_tokens": 2198
+  },
+  "metadata": {
+    "perplexityId": "test-perplexity-id",
+    "model": "sonar-deep-research",
+    "jobId": "test-job-001"
+  },
+  "processingTime": 45000,
+  "completedAt": "2024-01-15T10:30:00.000Z"
+}
+
+###
+
+### 9. Test de callback con error
+POST {{baseUrl}}/deep-research/callback/test
+Content-Type: application/json
+
+{
+  "success": false,
+  "requestId": "test-error-001",
+  "error": "Error de prueba: Timeout en la API de Perplexity",
+  "metadata": {
+    "jobId": "test-job-error",
+    "errorType": "TimeoutError"
+  },
+  "processingTime": 300000,
+  "completedAt": "2024-01-15T10:35:00.000Z"
+}
+
+###
