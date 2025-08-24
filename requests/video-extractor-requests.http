@@ -1,0 +1,150 @@
+###
+# Video Extractor API - MVP
+# Sistema de extracción de thumbnails de videos
+###
+
+### Variables
+@baseUrl = http://localhost:3000
+@callbackUrl = {{baseUrl}}/video-extractor/callback/test
+
+### 1. Health Check - Verificar que el Video Extractor esté configurado
+GET {{baseUrl}}/video-extractor/health
+Content-Type: application/json
+
+###
+
+### 2. Encolar extracción básica de thumbnails
+POST {{baseUrl}}/video-extractor/enqueue
+Content-Type: application/json
+
+{
+  "videoUrl": "https://sample-videos.com/zip/10/mp4/SampleVideo_720x480_1mb.mp4",
+  "callbackUrl": "{{callbackUrl}}"
+}
+
+###
+
+### 3. Extracción con opciones personalizadas
+POST {{baseUrl}}/video-extractor/enqueue
+Content-Type: application/json
+
+{
+  "videoUrl": "https://sample-videos.com/zip/10/mp4/SampleVideo_720x480_1mb.mp4",
+  "callbackUrl": "{{callbackUrl}}",
+  "requestId": "custom-extraction-001",
+  "metadata": {
+    "category": "sample-video",
+    "source": "sample-videos.com",
+    "user": "test-user"
+  },
+  "options": {
+    "fps": 0.5,
+    "width": 640,
+    "height": 480,
+    "format": "png",
+    "maxThumbnails": 5
+  }
+}
+
+###
+
+### 4. Extracción para video de prueba con alta frecuencia
+POST {{baseUrl}}/video-extractor/enqueue
+Content-Type: application/json
+
+{
+  "videoUrl": "https://sample-videos.com/zip/10/mp4/SampleVideo_720x480_1mb.mp4",
+  "callbackUrl": "{{callbackUrl}}",
+  "requestId": "high-fps-test",
+  "options": {
+    "fps": 2.0,
+    "width": 320,
+    "height": 240,
+    "format": "jpg",
+    "maxThumbnails": 10
+  }
+}
+
+###
+
+### 5. Consultar estado de extracción (reemplaza 'your-request-id' con un ID real)
+GET {{baseUrl}}/video-extractor/status/your-request-id
+Content-Type: application/json
+
+###
+
+### 6. Obtener estadísticas de la cola
+GET {{baseUrl}}/video-extractor/queue/stats
+Content-Type: application/json
+
+###
+
+### 7. Extracción con configuración completa (todas las opciones)
+POST {{baseUrl}}/video-extractor/enqueue
+Content-Type: application/json
+
+{
+  "videoUrl": "https://sample-videos.com/zip/10/mp4/SampleVideo_720x480_1mb.mp4",
+  "callbackUrl": "{{callbackUrl}}",
+  "requestId": "full-config-test",
+  "metadata": {
+    "project": "video-extraction-test",
+    "version": "1.0.0",
+    "environment": "development",
+    "tags": ["test", "sample", "full-config"]
+  },
+  "options": {
+    "fps": 1.0,
+    "width": 800,
+    "height": 600,
+    "format": "webp",
+    "maxThumbnails": 8
+  }
+}
+
+###
+
+### 8. Prueba con video más largo (si tienes acceso a uno)
+POST {{baseUrl}}/video-extractor/enqueue
+Content-Type: application/json
+
+{
+  "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+  "callbackUrl": "{{callbackUrl}}",
+  "requestId": "long-video-test",
+  "options": {
+    "fps": 0.1,
+    "width": 480,
+    "height": 270,
+    "format": "jpg",
+    "maxThumbnails": 20
+  }
+}
+
+###
+
+### 9. Prueba de error - URL inválida
+POST {{baseUrl}}/video-extractor/enqueue
+Content-Type: application/json
+
+{
+  "videoUrl": "https://invalid-url-for-testing.com/nonexistent.mp4",
+  "callbackUrl": "{{callbackUrl}}",
+  "requestId": "error-test"
+}
+
+###
+
+### 10. Prueba de validación - FPS fuera de rango
+POST {{baseUrl}}/video-extractor/enqueue
+Content-Type: application/json
+
+{
+  "videoUrl": "https://sample-videos.com/zip/10/mp4/SampleVideo_720x480_1mb.mp4",
+  "callbackUrl": "{{callbackUrl}}",
+  "options": {
+    "fps": 50.0
+  }
+}
+
+###
