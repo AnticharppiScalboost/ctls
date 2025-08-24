@@ -12,8 +12,7 @@ import {
   VIDEO_EXTRACTOR_JOBS, 
   QUEUE_OPTIONS,
   FPS_LIMITS,
-  DIMENSION_LIMITS,
-  THUMBNAIL_LIMITS
+  DIMENSION_LIMITS
 } from '../constants/video-extractor.constants';
 
 @Injectable()
@@ -152,11 +151,7 @@ export class VideoQueueService {
       }
     }
 
-    if (options.maxThumbnails !== undefined) {
-      if (typeof options.maxThumbnails !== 'number' || options.maxThumbnails < THUMBNAIL_LIMITS.MIN || options.maxThumbnails > THUMBNAIL_LIMITS.MAX) {
-        throw new Error(`maxThumbnails debe estar entre ${THUMBNAIL_LIMITS.MIN} y ${THUMBNAIL_LIMITS.MAX}`);
-      }
-    }
+
   }
 
   /**
@@ -168,7 +163,6 @@ export class VideoQueueService {
       width: options.width || DIMENSION_LIMITS.WIDTH.DEFAULT,
       height: options.height || DIMENSION_LIMITS.HEIGHT.DEFAULT,
       format: options.format || 'jpg',
-      maxThumbnails: options.maxThumbnails || THUMBNAIL_LIMITS.DEFAULT,
     };
   }
 }

@@ -49,11 +49,7 @@ export const DIMENSION_LIMITS = {
   },
 } as const;
 
-export const THUMBNAIL_LIMITS = {
-  MIN: 1,
-  MAX: 100,
-  DEFAULT: 10,
-} as const;
+
 
 export const POLLING_CONFIG = {
   INTERVAL: 2000, // 2 segundos

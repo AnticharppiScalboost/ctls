@@ -35,8 +35,7 @@ Content-Type: application/json
     "fps": 0.5,
     "width": 640,
     "height": 480,
-    "format": "png",
-    "maxThumbnails": 5
+    "format": "png"
   }
 }
 

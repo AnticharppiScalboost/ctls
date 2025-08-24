@@ -34,12 +34,6 @@ export class VideoExtractionOptionsDto implements VideoExtractionOptions {
   @IsOptional()
   @IsEnum(['jpg', 'jpeg', 'png', 'webp'])
   format?: 'jpg' | 'jpeg' | 'png' | 'webp';
-
-  @IsOptional()
-  @IsNumber()
-  @Min(1)
-  @Max(100)
-  maxThumbnails?: number;
 }
 
 export class VideoExtractionRequestDto {

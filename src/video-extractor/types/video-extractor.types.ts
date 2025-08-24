@@ -11,7 +11,6 @@ export interface VideoExtractionOptions {
   width?: number;
   height?: number;
   format?: 'jpg' | 'jpeg' | 'png' | 'webp';
-  maxThumbnails?: number;
 }
 
 export interface VideoExtractionJob {
@@ -31,7 +30,6 @@ export interface ThumbnailExtractionApiRequest {
   height?: number;
   format?: string;
   webhook_url?: string;
-  max_thumbnails?: number;
 }
 
 export interface ThumbnailExtractionApiResponse {

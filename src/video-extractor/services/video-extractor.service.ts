@@ -11,8 +11,7 @@ import type {
 import { 
   API_ENDPOINTS,
   FPS_LIMITS,
-  DIMENSION_LIMITS,
-  THUMBNAIL_LIMITS
+  DIMENSION_LIMITS
 } from '../constants/video-extractor.constants';
 
 @Injectable()
@@ -62,7 +61,6 @@ export class VideoExtractorService {
         height: request.options?.height || DIMENSION_LIMITS.HEIGHT.DEFAULT,
         format: request.options?.format || 'jpg',
         webhook_url: request.callbackUrl,
-        max_thumbnails: request.options?.maxThumbnails || THUMBNAIL_LIMITS.DEFAULT,
       };
 
       this.logger.debug(`🎬 [VIDEO_EXTRACTOR] Payload: ${JSON.stringify(payload, null, 2)}`);

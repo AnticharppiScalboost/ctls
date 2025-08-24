@@ -37,8 +37,7 @@ Sistema MVP que expone únicamente un endpoint para encolar tareas de extracció
     "fps": 1.0,
     "width": 640,
     "height": 480,
-    "format": "jpg",
-    "maxThumbnails": 10
+    "format": "jpg"
   }
 }
 ```
@@ -53,7 +52,6 @@ Sistema MVP que expone únicamente un endpoint para encolar tareas de extracció
   - `width` (64-1920, default: 320): Ancho en píxeles
   - `height` (64-1080, default: 240): Alto en píxeles
   - `format` (jpg/jpeg/png/webp, default: jpg): Formato de salida
-  - `maxThumbnails` (1-100, default: 10): Máximo número de thumbnails
 
 **Response:**
 
